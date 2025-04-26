@@ -1,13 +1,20 @@
 package com.kayailker.authservice.auth.model;
 
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.AllArgsConstructor;
+import jakarta.validation.constraints.Email;
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 
 public class RegisterRequest {
+
+    @NotBlank(message = "Username is required")
     private String username;
+    @NotBlank(message = "Full name is required")
     private String fullName;
+    @Email(message = "Email should be valid")
+    @NotBlank(message = "Email is required")
     private String email;
+    @NotBlank(message = "Password is required")
+    @Size(min = 6, max = 20, message = "Password must be between 6 and 20 characters")
     private String password;
 
     public RegisterRequest(String username, String fullName, String email, String password) {
