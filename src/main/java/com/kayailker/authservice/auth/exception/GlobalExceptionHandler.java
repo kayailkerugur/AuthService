@@ -33,6 +33,16 @@ public class GlobalExceptionHandler {
         return buildErrorResponse("Internal server error: " + ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
 
+    @ExceptionHandler(UserNotFoundException.class)
+    public ResponseEntity<Map<String, Object>> handleUserNotFoundException(UserNotFoundException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.NOT_FOUND);
+    }
+
+    @ExceptionHandler(InvalidResetTokenException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidResetTokenException(InvalidResetTokenException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
+    }
+
     private ResponseEntity<Map<String, Object>> buildErrorResponse(String message, HttpStatus status) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", Instant.now());

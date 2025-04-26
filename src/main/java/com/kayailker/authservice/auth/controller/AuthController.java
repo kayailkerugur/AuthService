@@ -55,8 +55,12 @@ public class AuthController {
     }
 
     @PostMapping("/reset-password")
-    public ResponseEntity<Void> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
+    public ResponseEntity<Map<String, String>> resetPassword(@RequestBody @Valid ResetPasswordRequest request) {
         authService.resetPassword(request);
-        return ResponseEntity.ok().build();
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Password reset successfully");
+
+        return ResponseEntity.ok(response);
     }
 }

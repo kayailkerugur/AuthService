@@ -1,8 +1,6 @@
 package com.kayailker.authservice.auth.service;
 
-import com.kayailker.authservice.auth.exception.EmailAlreadyInUseException;
-import com.kayailker.authservice.auth.exception.InvalidCredentialsException;
-import com.kayailker.authservice.auth.exception.UsernameAlreadyInUseException;
+import com.kayailker.authservice.auth.exception.*;
 import com.kayailker.authservice.auth.model.*;
 import com.kayailker.authservice.auth.model.entity.User;
 import com.kayailker.authservice.auth.repository.UserRepository;
@@ -92,7 +90,7 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public String forgotPassword(ForgotPasswordRequest request) {
         User user = userRepository.findByEmail(request.getEmail())
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         return jwtUtil.generateResetToken(user.getId());
     }
@@ -100,12 +98,12 @@ public class AuthServiceImpl implements AuthService {
     @Override
     public void resetPassword(ResetPasswordRequest request) {
         if (!jwtUtil.validateToken(request.getResetToken())) {
-            throw new RuntimeException("Invalid or expired reset token");
+            throw new InvalidResetTokenException("Invalid or expired reset token");
         }
-
         String userId = jwtUtil.getResetUserIdFromToken(request.getResetToken());
+
         User user = userRepository.findById(UUID.fromString(userId))
-                .orElseThrow(() -> new RuntimeException("User not found"));
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
 
         user.setPassword(passwordEncoder.encode(request.getNewPassword()));
         userRepository.save(user);
