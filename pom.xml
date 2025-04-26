@@ -101,7 +101,7 @@
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.30</version> <!-- En güncel stabil sürüm -->
+			<version>1.18.30</version> <!-- veya en güncel stabil sürüm -->
 			<scope>provided</scope>
 		</dependency>
 		<!-- Runtime -->
