@@ -1,0 +1,11 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-verification-code-column
+      author: kayailker
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: verification_code
+                  type: varchar(10)

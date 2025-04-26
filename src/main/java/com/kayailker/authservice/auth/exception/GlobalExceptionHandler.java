@@ -43,6 +43,16 @@ public class GlobalExceptionHandler {
         return buildErrorResponse(ex.getMessage(), HttpStatus.UNAUTHORIZED);
     }
 
+    @ExceptionHandler(InvalidVerificationCodeException.class)
+    public ResponseEntity<Map<String, Object>> handleInvalidVerificationCodeException(InvalidVerificationCodeException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(EmailNotVerifiedException.class)
+    public ResponseEntity<Map<String, Object>> handleEmailNotVerifiedException(EmailNotVerifiedException ex) {
+        return buildErrorResponse(ex.getMessage(), HttpStatus.FORBIDDEN);
+    }
+
     private ResponseEntity<Map<String, Object>> buildErrorResponse(String message, HttpStatus status) {
         Map<String, Object> body = new HashMap<>();
         body.put("timestamp", Instant.now());

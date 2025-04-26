@@ -35,8 +35,8 @@ public class AuthController {
     @PostMapping("/register")
     public ResponseEntity<?> register(@RequestBody @Valid RegisterRequest registerRequest) {
         authService.register(registerRequest);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
+        return ResponseEntity.status(HttpStatus.CREATED)
+                .body(Map.of("message", "Kayıt başarılı! Lütfen emailinizi kontrol ederek hesabınızı doğrulayın."));    }
 
     @GetMapping("/me")
     public ResponseEntity<UserProfileResponse> getProfile(@RequestHeader("Authorization") String authHeader) {
@@ -60,6 +60,36 @@ public class AuthController {
 
         Map<String, String> response = new HashMap<>();
         response.put("message", "Password reset successfully");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/verify-email")
+    public ResponseEntity<Map<String, String>> verifyEmail(@RequestBody @Valid VerifyEmailRequest request) {
+        authService.verifyEmail(request);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Email successfully verified! Now you can log in.");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/forgot-password/request-code")
+    public ResponseEntity<Map<String, String>> sendForgotPasswordCode(@RequestBody @Valid ForgotPasswordRequest request) {
+        authService.sendForgotPasswordCode(request);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Şifre sıfırlama kodu e-posta adresinize gönderildi.");
+
+        return ResponseEntity.ok(response);
+    }
+
+    @PostMapping("/forgot-password/verify-code")
+    public ResponseEntity<Map<String, String>> verifyForgotPasswordCode(@RequestBody @Valid ForgotPasswordCodeVerifyRequest request) {
+        authService.verifyForgotPasswordCode(request);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Doğrulama kodu doğru! Şifre sıfırlama adımına geçebilirsiniz.");
 
         return ResponseEntity.ok(response);
     }

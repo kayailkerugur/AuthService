@@ -10,4 +10,9 @@ public interface AuthService {
 
     String forgotPassword(ForgotPasswordRequest request);
     void resetPassword(ResetPasswordRequest request);
+
+    void verifyEmail(VerifyEmailRequest request);
+
+    void sendForgotPasswordCode(ForgotPasswordRequest request);
+    void verifyForgotPasswordCode(ForgotPasswordCodeVerifyRequest request);
 }

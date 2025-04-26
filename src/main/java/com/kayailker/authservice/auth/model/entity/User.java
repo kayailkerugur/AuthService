@@ -30,8 +30,14 @@ public class User {
 
     private Boolean isVerified = false;
 
+    @Column(name = "verification_code", length = 10)
+    private String verificationCode;
+
     @CreationTimestamp
     private Instant createdAt;
+
+    @Column(name = "forgot_password_code", length = 10)
+    private String forgotPasswordCode;
 
     public User(String username, String email, String password, String fullName, Boolean isVerified, Instant createdAt) {
         this.username = username;
@@ -99,5 +105,21 @@ public class User {
 
     public void setCreatedAt(Instant createdAt) {
         this.createdAt = createdAt;
+    }
+
+    public String getVerificationCode() {
+        return verificationCode;
+    }
+
+    public void setVerificationCode(String verificationCode) {
+        this.verificationCode = verificationCode;
+    }
+
+    public String getForgotPasswordCode() {
+        return forgotPasswordCode;
+    }
+
+    public void setForgotPasswordCode(String forgotPasswordCode) {
+        this.forgotPasswordCode = forgotPasswordCode;
     }
 }

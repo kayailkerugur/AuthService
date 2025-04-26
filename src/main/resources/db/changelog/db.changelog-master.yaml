@@ -1,3 +1,9 @@
 databaseChangeLog:
   - include:
       file: db/changelog/db.changelog-1.0-init.yaml
+
+  - include:
+      file: db/changelog/changes/2025-04-26-add-verification-code.yaml
+
+  - include:
+      file: db/changelog/changes/add-forgot-password-code.yaml

@@ -18,18 +18,7 @@ public class TestMailController {
 
     @PostMapping
     public ResponseEntity<String> sendTestEmail(@RequestParam String to) {
-        String body = """
-    Merhaba Ortekay,
-
-    Bu, sistemimiz tarafından gönderilen test amaçlı bir e-postadır.
-
-    Eğer bu e-postayı beklemiyorsanız lütfen dikkate almayınız.
-
-    İyi günler dileriz!
-    
-    - RestLocation Auth Team
-    """;
-        mailService.sendEmail(to, "Test Mail", body);
+        mailService.sendEmail(to, "Test Mail", "body");
 
         return ResponseEntity.ok("Mail gönderildi!");
     }
