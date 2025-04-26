@@ -6,21 +6,23 @@ import org.springframework.stereotype.Component;
 
 import java.security.Key;
 import java.util.Date;
+import java.util.UUID;
 
 @Component
 public class JwtUtil {
-    private final String jwtSecret = "supersecretkeysupersecretkeysupersecretkey"; // en az 32 karakter olmalı
-    private final long jwtExpirationMs = 86400000; // 1 gün
+    private final String jwtSecret = "supersecretkeysupersecretkeysupersecretkey";
+    private final long jwtExpirationMs = 86400000;
 
     private Key getSigningKey() {
         return Keys.hmacShaKeyFor(jwtSecret.getBytes());
     }
 
-    public String generateToken(String username, long expirationMillis) {
+    public String generateToken(UUID userId, String email, long expirationMs) {
         return Jwts.builder()
-                .setSubject(username)
+                .setSubject(email)
+                .claim("id", userId.toString())
                 .setIssuedAt(new Date())
-                .setExpiration(new Date(System.currentTimeMillis() + expirationMillis))
+                .setExpiration(new Date(System.currentTimeMillis() + expirationMs))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)
                 .compact();
     }
@@ -44,5 +46,18 @@ public class JwtUtil {
         } catch (JwtException | IllegalArgumentException e) {
             return false;
         }
+    }
+
+    public String getUserIdFromToken(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("id", String.class);
+    }
+
+    private Claims extractAllClaims(String token) {
+        return Jwts.parserBuilder()
+                .setSigningKey(getSigningKey())
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
     }
 }

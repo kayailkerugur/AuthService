@@ -1,9 +1,6 @@
 package com.kayailker.authservice.auth.controller;
 
-import com.kayailker.authservice.auth.model.JwtResponse;
-import com.kayailker.authservice.auth.model.LoginRequest;
-import com.kayailker.authservice.auth.model.RefreshTokenRequest;
-import com.kayailker.authservice.auth.model.RegisterRequest;
+import com.kayailker.authservice.auth.model.*;
 import com.kayailker.authservice.auth.service.AuthService;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,5 +32,11 @@ public class AuthController {
     public ResponseEntity<?> register(@RequestBody RegisterRequest registerRequest) {
         authService.register(registerRequest);
         return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<UserProfileResponse> getProfile(@RequestHeader("Authorization") String authHeader) {
+        UserProfileResponse profile = authService.getProfile(authHeader);
+        return ResponseEntity.ok(profile);
     }
 }
