@@ -60,4 +60,18 @@ public class JwtUtil {
                 .parseClaimsJws(token)
                 .getBody();
     }
+
+    public String generateResetToken(UUID userId) {
+        return Jwts.builder()
+                .claim("resetUserId", userId.toString())
+                .setIssuedAt(new Date())
+                .setExpiration(new Date(System.currentTimeMillis() + 15 * 60 * 1000)) // 15 dakika
+                .signWith(getSigningKey(), SignatureAlgorithm.HS256)
+                .compact();
+    }
+
+    public String getResetUserIdFromToken(String token) {
+        Claims claims = extractAllClaims(token);
+        return claims.get("resetUserId", String.class);
+    }
 }
