@@ -177,7 +177,6 @@ public class AuthServiceImpl implements AuthService {
             throw new InvalidVerificationCodeException("Invalid or expired forgot password code");
         }
 
-        // Kod doğruysa ➔ bir daha kullanılmaması için sıfırla
         user.setForgotPasswordCode(null);
         userRepository.save(user);
     }
