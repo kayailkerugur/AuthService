@@ -93,4 +93,13 @@ public class AuthController {
 
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/delete-account")
+    public ResponseEntity<Map<String, String>> deleteAccount(@RequestHeader("Authorization") String token) {
+        authService.requestAccountDeletion(token);
+
+        Map<String, String> response = new HashMap<>();
+        response.put("message", "Your account deletion request has been received. You can recover your account within 30 days by logging in.");
+        return ResponseEntity.ok(response);
+    }
 }

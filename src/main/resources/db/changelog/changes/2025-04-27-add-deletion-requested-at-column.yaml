@@ -1,0 +1,13 @@
+databaseChangeLog:
+  - changeSet:
+      id: add-deletion-requested-at-column
+      author: kayailker
+      changes:
+        - addColumn:
+            tableName: users
+            columns:
+              - column:
+                  name: deletion_requested_at
+                  type: timestamp
+                  constraints:
+                    nullable: true

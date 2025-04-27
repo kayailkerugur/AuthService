@@ -7,3 +7,6 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/changes/add-forgot-password-code.yaml
+
+  - include:
+      file: db/changelog/changes/2025-04-27-add-deletion-requested-at-column.yaml

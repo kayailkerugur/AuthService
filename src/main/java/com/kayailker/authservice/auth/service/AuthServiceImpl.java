@@ -8,6 +8,7 @@ import com.kayailker.authservice.security.JwtUtil;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 @Service
@@ -36,6 +37,15 @@ public class AuthServiceImpl implements AuthService {
 
         if (Boolean.FALSE.equals(user.getVerified())) {
             throw new EmailNotVerifiedException("Email address is not verified. Please verify your email before logging in.");
+        }
+
+        if (user.getDeletionRequestedAt() != null) {
+            if (user.getDeletionRequestedAt().plusDays(30).isBefore(LocalDateTime.now())) {
+                throw new RuntimeException("Account has been permanently deleted.");
+            } else {
+                user.setDeletionRequestedAt(null);
+                userRepository.save(user);
+            }
         }
 
         String accessToken = jwtUtil.generateToken(user.getId(), user.getEmail(), 86400000);
@@ -126,7 +136,7 @@ public class AuthServiceImpl implements AuthService {
     }
 
     private String generateVerificationCode() {
-        int code = (int)(Math.random() * 900000) + 100000; // 6 haneli random sayı
+        int code = (int)(Math.random() * 900000) + 100000;
         return String.valueOf(code);
     }
 
@@ -180,4 +190,17 @@ public class AuthServiceImpl implements AuthService {
         user.setForgotPasswordCode(null);
         userRepository.save(user);
     }
+
+    @Override
+    public void requestAccountDeletion(String token) {
+        String email = jwtUtil.getUsernameFromToken(token);
+
+        User user = userRepository.findByEmail(email)
+                .orElseThrow(() -> new UserNotFoundException("User not found"));
+
+        user.setDeletionRequestedAt(LocalDateTime.now());
+        userRepository.save(user);
+    }
+
+
 }

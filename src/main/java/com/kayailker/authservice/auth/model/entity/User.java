@@ -7,6 +7,7 @@ import lombok.AllArgsConstructor;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.Instant;
+import java.time.LocalDateTime;
 import java.util.UUID;
 
 
@@ -38,6 +39,9 @@ public class User {
 
     @Column(name = "forgot_password_code", length = 10)
     private String forgotPasswordCode;
+
+    @Column(name = "deletion_requested_at")
+    private LocalDateTime deletionRequestedAt;
 
     public User(String username, String email, String password, String fullName, Boolean isVerified, Instant createdAt) {
         this.username = username;
@@ -121,5 +125,13 @@ public class User {
 
     public void setForgotPasswordCode(String forgotPasswordCode) {
         this.forgotPasswordCode = forgotPasswordCode;
+    }
+
+    public LocalDateTime getDeletionRequestedAt() {
+        return deletionRequestedAt;
+    }
+
+    public void setDeletionRequestedAt(LocalDateTime deletionRequestedAt) {
+        this.deletionRequestedAt = deletionRequestedAt;
     }
 }
