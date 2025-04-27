@@ -1,5 +1,6 @@
 package com.kayailker.authservice.security;
 
+import com.kayailker.authservice.auth.repository.BlacklistedTokenRepository;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -18,8 +19,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil) {
+    private final BlacklistedTokenRepository blacklistRepository;
+
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, BlacklistedTokenRepository blacklistRepository) {
         this.jwtUtil = jwtUtil;
+        this.blacklistRepository = blacklistRepository;
     }
 
     @Override
@@ -42,6 +46,11 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
+
+            if (blacklistRepository.existsByToken(token)) {
+                response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
+                return;
+            }
 
             if (jwtUtil.validateToken(token)) {
                 String username = jwtUtil.getUsernameFromToken(token);

@@ -1,0 +1,22 @@
+databaseChangeLog:
+  - changeSet:
+      id: create-blacklisted-tokens
+      author: kayailker
+      changes:
+        - createTable:
+            tableName: blacklisted_tokens
+            columns:
+              - column:
+                  name: id
+                  type: UUID
+                  constraints:
+                    primaryKey: true
+              - column:
+                  name: token
+                  type: varchar(500)
+                  constraints:
+                    nullable: false
+              - column:
+                  name: blacklisted_at
+                  type: timestamp
+                  defaultValueComputed: CURRENT_TIMESTAMP
