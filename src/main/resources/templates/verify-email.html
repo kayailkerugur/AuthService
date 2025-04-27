@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+    <meta charset="UTF-8">
+    <title>Email Doğrulama</title>
+</head>
+<body style="font-family: Arial, sans-serif; background-color: #f9f9f9; padding: 20px;">
+<div style="max-width: 600px; margin: auto; background-color: white; padding: 20px; border-radius: 10px;">
+    <h2 style="color: #333;">Email Doğrulama İşlemi</h2>
+    <p>Merhaba <strong th:text="${fullName}">Kullanıcı</strong>,</p>
+    <p>Hesabınızı doğrulamak için aşağıdaki kodu kullanın:</p>
+    <div style="text-align: center; margin: 20px 0;">
+        <span style="font-size: 24px; font-weight: bold; color: #28a745;" th:text="${verificationCode}">ABC123</span>
+    </div>
+    <p style="font-size: 12px; color: #777;">Bu kodu kayıt işlemini tamamlamak için kullanabilirsiniz.</p>
+</div>
+</body>
+</html>

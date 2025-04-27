@@ -18,7 +18,7 @@ public class TestMailController {
 
     @PostMapping
     public ResponseEntity<String> sendTestEmail(@RequestParam String to) {
-        mailService.sendEmail(to, "Test Mail", "body");
+        mailService.sendForgotPasswordEmail(to,"kayailkerugur","245824");
 
         return ResponseEntity.ok("Mail gönderildi!");
     }

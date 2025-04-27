@@ -5,6 +5,7 @@ import com.kayailker.authservice.auth.model.*;
 import com.kayailker.authservice.auth.model.entity.User;
 import com.kayailker.authservice.auth.repository.UserRepository;
 import com.kayailker.authservice.security.JwtUtil;
+import jakarta.mail.MessagingException;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -88,12 +89,12 @@ public class AuthServiceImpl implements AuthService {
 
         userRepository.save(newUser);
 
-        // Email Gönderiyoruz!
-        mailService.sendEmail(
-                newUser.getEmail(),
-                "Email Doğrulama Kodu",
-                "Merhaba " + newUser.getFullName() + ",\n\nEmail doğrulama kodunuz: " + verificationCode + "\n\nİyi günler dileriz!"
-        );
+        try {
+            mailService.sendVerificationEmail(newUser.getEmail(), newUser.getUsername(), verificationCode);
+        } catch (MessagingException e) {
+            throw new RuntimeException(e);
+        }
+
     }
 
     @Override
@@ -171,11 +172,8 @@ public class AuthServiceImpl implements AuthService {
         user.setForgotPasswordCode(forgotPasswordCode);
         userRepository.save(user);
 
-        mailService.sendEmail(
-                user.getEmail(),
-                "Şifre Sıfırlama Kodunuz",
-                "Merhaba " + user.getFullName() + ",\n\nŞifre sıfırlama için doğrulama kodunuz: " + forgotPasswordCode + "\n\nBu kodu kullanarak şifrenizi sıfırlayabilirsiniz.\n\n- RestLocation Auth Team"
-        );
+        mailService.sendForgotPasswordEmail(user.getEmail(), user.getUsername(), forgotPasswordCode);
+
     }
 
     @Override
@@ -201,6 +199,5 @@ public class AuthServiceImpl implements AuthService {
         user.setDeletionRequestedAt(LocalDateTime.now());
         userRepository.save(user);
     }
-
 
 }
