@@ -16,4 +16,6 @@ public interface AuthService {
     void sendForgotPasswordCode(ForgotPasswordRequest request);
     void verifyForgotPasswordCode(ForgotPasswordCodeVerifyRequest request);
     void requestAccountDeletion(String token);
+
+    void logout(String authHeader);
 }

@@ -102,4 +102,10 @@ public class AuthController {
         response.put("message", "Your account deletion request has been received. You can recover your account within 30 days by logging in.");
         return ResponseEntity.ok(response);
     }
+
+    @PostMapping("/logout")
+    public ResponseEntity<?> logout(@RequestHeader("Authorization") String authHeader) {
+        authService.logout(authHeader);
+        return ResponseEntity.ok("Successfully logged out.");
+    }
 }
