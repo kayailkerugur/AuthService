@@ -10,6 +10,3 @@ databaseChangeLog:
 
   - include:
       file: db/changelog/changes/2025-04-27-add-deletion-requested-at-column.yaml
-
-  - include:
-      file: db/changelog/changes/2025-04-27-create-blacklisted-tokens.yaml

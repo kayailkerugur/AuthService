@@ -13,7 +13,7 @@ JWT (Access Token ve Refresh Token) mimarisi, email doğrulama, şifre sıfırla
 - Şifre Sıfırlama (Forgot Password ve Reset Password)
 - Kullanıcı Profil Bilgisi Çekme
 - Hesap Silme (30 Gün Bekleme Süresiyle)
-- Logout İşlemi ve Token Blacklist
+- Logout İşlemi ve Redis Tabanlı Token Blacklist Yönetimi
 - HTML Formatlı Şık Mail Gönderimi
 - Spring Security ve Token Tabanlı Yetkilendirme
 
@@ -25,6 +25,7 @@ JWT (Access Token ve Refresh Token) mimarisi, email doğrulama, şifre sıfırla
 - Spring Boot 3.4.5
 - Spring Security
 - JWT (JSON Web Token)
+- Redis (In-memory Token Blacklist Sistemi)
 - JavaMailSender (SMTP ile Email Gönderimi)
 - Liquibase (Database Migration)
 - PostgreSQL (Veritabanı)
@@ -36,7 +37,28 @@ JWT (Access Token ve Refresh Token) mimarisi, email doğrulama, şifre sıfırla
 
 ## 📦 Projeyi Çalıştırmak İçin
 
-1. Maven bağımlılıklarını indir:
+1. Redis Kurulumu
+
+MacOS (Homebrew ile):
+```bash
+brew install redis
+brew services start redis
+```
+
+Docker ile Redis çalıştırmak:
+```bash 
+docker run -d --name redis -p 6379:6379 redis
+```
+
+Redis Bağlantısını Test Etmek:
+```bash
+redis-cli ping
+# Beklenen çıktı: PONG
+```
+
+✅ Eğer PONG yanıtı alırsanız Redis başarıyla çalışıyor demektir.
+
+2. Maven bağımlılıklarını indir:
 
 ```bash
 mvn clean install
@@ -64,6 +86,12 @@ spring.mail.username=your_email@gmail.com
 spring.mail.password=your_email_password
 spring.mail.properties.mail.smtp.auth=true
 spring.mail.properties.mail.smtp.starttls.enable=true
+
+### Redis Ayarları
+spring.data.redis.host=localhost
+spring.data.redis.port=6379
+# Eğer Redis şifreli ise şu satırı da ekleyin:
+# spring.redis.password=your_redis_password
 ```
 3. Uygulamayı başlat:
 

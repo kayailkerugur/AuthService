@@ -2,9 +2,7 @@ package com.kayailker.authservice.auth.service;
 
 import com.kayailker.authservice.auth.exception.*;
 import com.kayailker.authservice.auth.model.*;
-import com.kayailker.authservice.auth.model.entity.BlacklistedToken;
 import com.kayailker.authservice.auth.model.entity.User;
-import com.kayailker.authservice.auth.repository.BlacklistedTokenRepository;
 import com.kayailker.authservice.auth.repository.UserRepository;
 import com.kayailker.authservice.security.JwtUtil;
 import jakarta.mail.MessagingException;
@@ -21,14 +19,14 @@ public class AuthServiceImpl implements AuthService {
     private final PasswordEncoder passwordEncoder;
     private final UserRepository userRepository;
     private final MailService mailService;
-    private final BlacklistedTokenRepository blacklistedTokenRepository;
+    private final RedisService redisService;
 
-    public AuthServiceImpl(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UserRepository userRepository, MailService mailService, BlacklistedTokenRepository blacklistedTokenRepository) {
+    public AuthServiceImpl(JwtUtil jwtUtil, PasswordEncoder passwordEncoder, UserRepository userRepository, MailService mailService, RedisService redisService) {
         this.jwtUtil = jwtUtil;
         this.passwordEncoder = passwordEncoder;
         this.userRepository = userRepository;
         this.mailService = mailService;
-        this.blacklistedTokenRepository = blacklistedTokenRepository;
+        this.redisService = redisService;
     }
 
     @Override
@@ -206,12 +204,8 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void logout(String authHeader) {
-        String token = authHeader.replace("Bearer ", "");
-
-        BlacklistedToken blacklistedToken = new BlacklistedToken();
-        blacklistedToken.setToken(token);
-
-        blacklistedTokenRepository.save(blacklistedToken);
+        String tokenWithoutBearer = authHeader.replace("Bearer ", "");
+        redisService.blacklistToken(tokenWithoutBearer, 86400000);
     }
 
 }

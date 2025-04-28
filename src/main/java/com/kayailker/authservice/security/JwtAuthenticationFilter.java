@@ -1,6 +1,6 @@
 package com.kayailker.authservice.security;
 
-import com.kayailker.authservice.auth.repository.BlacklistedTokenRepository;
+import com.kayailker.authservice.auth.service.RedisService;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -19,11 +19,12 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
 
     private final JwtUtil jwtUtil;
 
-    private final BlacklistedTokenRepository blacklistRepository;
 
-    public JwtAuthenticationFilter(JwtUtil jwtUtil, BlacklistedTokenRepository blacklistRepository) {
+    private final RedisService redisService;
+
+    public JwtAuthenticationFilter(JwtUtil jwtUtil, RedisService redisService) {
         this.jwtUtil = jwtUtil;
-        this.blacklistRepository = blacklistRepository;
+        this.redisService = redisService;
     }
 
     @Override
@@ -47,7 +48,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         if (authHeader != null && authHeader.startsWith("Bearer ")) {
             String token = authHeader.substring(7);
 
-            if (blacklistRepository.existsByToken(token)) {
+            if (redisService.isTokenBlacklisted(token)) {
                 response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
                 response.setContentType("application/json");
                 response.getWriter().write("{\"error\": \"Token is blacklisted\"}");
